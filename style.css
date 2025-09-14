@@ -1,0 +1,34 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+}
+
+#difficulty-buttons {
+  margin: 20px;
+}
+
+.board {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.card {
+  width: 100px;
+  height: 140px;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+.card.flipped {
+  background-color: #fff;
+}
