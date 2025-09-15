@@ -4,6 +4,15 @@ body {
   background-color: #f4f4f4;
 }
 
+h1 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 3rem;
+  color: #27ae60;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
 #difficulty-buttons {
   margin: 20px;
 }

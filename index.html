@@ -4,18 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="./style.css" />
-  <script defer src="/app.js"></script>
+  <script defer src="app.js"></script>
   <title>Memory Card Game</title>
 
 </head>
 <body>
   <h1>Memory Card Game</h1>
 
-  <div id="difficulty-buttons">
-    <button onclick="startGame('easy')">Easy</button>
-    <button onclick="startGame('medium')">Medium</button>
-    <button onclick="startGame('hard')">Hard</button>
-  </div>
+ <div id="difficulty-selection">
+  <select id="difficulty-select">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+  <button id="start-btn">Start Game</button>
+</div>
+  <div id="game-info">
+  <p>Level: <span id="level">-</span></p>
+  <p>Score: <span id="score">0</span></p>
+  <p>Time: <span id="timer">0</span> seconds</p>
+  <p id="message"></p>
+</div>
+
+<div id="control-buttons">
+  <button id="restart-btn" style="display:none;">Restart</button>
+  <button id="play-again-btn" style="display:none;">Play Again</button>
+</div>
+
 
   <div id="game-board" class="board"></div>
 
