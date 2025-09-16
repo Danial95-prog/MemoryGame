@@ -58,7 +58,32 @@ if (difficulty === 'hard') {
   const shuffled = shuffle(numbers);
   console.log("Cards shuffled:", shuffled);
 
+
+  // Loop through each card number and create a card element
+for (let i = 0; i < shuffled.length; i++) {
+  const card = document.createElement('div');
+  card.className = 'card'; 
+  card.textContent = '';  // This is the start of an empty card as it is hidden first 
+ 
+  /*save the cards value inside the data number attribute
+  and it also helps me identify which card is which when clicked*/
+    card.setAttribute('data-number', shuffled[i]);
+
+  
+  card.addEventListener('click', function () {
+    // Show the number when clicked
+    card.textContent = card.getAttribute('data-number');
+    // This will help me check if the card is working
+    console.log("Card clicked:", card.getAttribute('data-number'));
+  });
+
+  // Add the card to the board
+  board.appendChild(card);
+
 }
+
+}
+
 
 //Start button and difficulty dropdown
 const startButton = document.getElementById('start-btn');
