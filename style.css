@@ -18,12 +18,14 @@ h1 {
 }
 
 .board {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
   margin: 0 auto;
   max-width: 600px;
 }
+
 
 .card {
   width: 100px;
