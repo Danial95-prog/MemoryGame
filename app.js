@@ -5,6 +5,10 @@ const flipBackDelay = 1000;
 /*-------------------------------- Variables --------------------------------*/
 let flippedCards = [];
 let matchedCards = [];
+let score = 0;
+let timer = 0;
+let timerInterval;
+let shuffled = []; //declared so it is accesible globally
 
 /*------------------------ Cached Element References ------------------------*/
 // Start Button to start
@@ -35,17 +39,26 @@ function startGame(difficulty) {
   const card2 = flippedCards[1];
 
   // This is to check if data matches
-  if (card1.getAttribute('data-number') === card2.getAttribute('data-number')) {
+  if (card1.getAttribute('data-symbol') === card2.getAttribute('data-symbol')) {
     // if cards matches
     card1.classList.add('matched');
     card2.classList.add('matched');
 
     matchedCards.push(card1, card2);
+   // Add score
+    score += 10;
+    document.getElementById('score').textContent = score;
+  
+
+    if (matchedCards.length === shuffled.length) {
+      clearInterval(timerInterval); //stop timer
+      document.getElementById('message').textContent = 'Level Complete!';
+    }
 
     //Flipped cards array will be cleared for next turn 
     flippedCards = [];
 
-    // TODO: Please Please Please check again later for score update and level complete
+    // TODO: Score and Level complete done
   } else {
     // flip back if cards do not matched
     card1.textContent = '';
@@ -61,44 +74,58 @@ function startGame(difficulty) {
 
   //clear board for new game
   board.innerHTML = '';
+  document.getElementById('message').textContent = '';
+
 
   // Reset the game state before starting a new game
   // Clears any cards that were flipped or matched in the previous round
   flippedCards = [];
   matchedCards = [];
   console.log("Reset flippedCards and matchedCards arrays");
+  // This is to resert score and the timer
+  score = 0;
+  timer = 0;
+  document.getElementById('score').textContent = score;
+  document.getElementById('timer').textContent = timer;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(function () {
+    timer++;
+
+    document.getElementById('timer').textContent = timer;
+  }, 1000);
 
   //Store the cards based on difficulty
-  let numbers = [];
+  let symbols = [];
 
   if (difficulty === 'easy') {
     console.log("Difficulty selected: Easy");
-    numbers = [1, 2, 1, 2]; // 2 pairs
+    symbols = ['🥟', '🍕', '🥟', '🍕']; // 2 pairs
   }
 
   if (difficulty === 'medium') {
     console.log("Difficulty selected: Medium");
-    numbers = [1, 2, 3, 4, 1, 2, 3, 4]; // 4 pairs
+    symbols = ['🥟', '🍕', '🍟', '🍦', '🥟', '🍕', '🍟', '🍦']; // 4 pairs
   }
 
   if (difficulty === 'hard') {
     console.log("Difficulty selected: Hard");
-    numbers = [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6]; // 6 pairs
+    symbols = ['🥟', '🍕', '🍟', '🍦', '🍣', '🍔', '🥟', '🍕', '🍟', '🍦', '🍣', '🍔']; // 6 pairs
   }
 
   // Cards shuffling
-  const shuffled = shuffle(numbers);
+  shuffled = shuffle(symbols); //Global variable
   console.log("Cards shuffled:", shuffled);
 
-  // Loop through each card number and create a card element
+  // Loop through each card symbol and create a card element
   for (let i = 0; i < shuffled.length; i++) {
     const card = document.createElement('div');
     card.className = 'card'; 
     card.textContent = '';  // This is the start of an empty card as it is hidden first
 
-    /*save the cards value inside the data number attribute
+    /*save the cards value inside the data symbol attribute
     and it also helps me identify which card is which when clicked*/
-    card.setAttribute('data-number', shuffled[i]);
+    card.setAttribute('data-symbol', shuffled[i]);
 
     card.addEventListener('click', function () {
   // If card is already flipped or matched, ignore clicks
@@ -111,8 +138,8 @@ function startGame(difficulty) {
     return; // do nothing
   }
 
-  // Show the card's number and mark it as flipped
-  card.textContent = card.getAttribute('data-number');
+  // Show the card's symbol and mark it as flipped
+  card.textContent = card.getAttribute('data-symbol');
   card.classList.add('flipped');
   flippedCards.push(card);
 
@@ -136,3 +163,6 @@ startButton.onclick = function() {
   console.log('Start button clicked. Selected difficulty:', selectedDifficulty);
   startGame(selectedDifficulty);
 };
+
+
+
