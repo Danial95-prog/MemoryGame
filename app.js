@@ -53,6 +53,8 @@ function startGame(difficulty) {
     if (matchedCards.length === shuffled.length) {
       clearInterval(timerInterval); //stop timer
       document.getElementById('message').textContent = 'Level Complete!';
+      console.log("Level complete! Total time:", timer, "seconds");
+
     }
 
     //Flipped cards array will be cleared for next turn 
@@ -87,6 +89,10 @@ function startGame(difficulty) {
   timer = 0;
   document.getElementById('score').textContent = score;
   document.getElementById('timer').textContent = timer;
+
+ console.log("Score reset to", score);
+ console.log("Timer reset to", timer);
+
 
   clearInterval(timerInterval);
   timerInterval = setInterval(function () {
@@ -143,8 +149,12 @@ function startGame(difficulty) {
   card.classList.add('flipped');
   flippedCards.push(card);
 
+  console.log("Card clicked:", card.getAttribute('data-symbol'));
+
+
   // Check for a match after a short delay(when 2 cards flipped)
   if (flippedCards.length === maxFlippedCards) {
+    console.log("Two cards flipped, checking for match...");
     setTimeout(checkForMatch, flipBackDelay);
   }
 });
