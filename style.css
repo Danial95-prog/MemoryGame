@@ -42,4 +42,13 @@ h1 {
 }
 .card.flipped {
   background-color: #fff;
+  transform: rotateY(180deg);
+  transition: transform 0.5s;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.card.matched {
+  background-color: #27ae60; 
+  color: white;
+  cursor: default;
 }

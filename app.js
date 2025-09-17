@@ -30,6 +30,35 @@ function shuffle(array) {
 function startGame(difficulty) {
   console.log("Starting game with difficulty: " + difficulty);
 
+  function checkForMatch() {
+  const card1 = flippedCards[0];
+  const card2 = flippedCards[1];
+
+  // This is to check if data matches
+  if (card1.getAttribute('data-number') === card2.getAttribute('data-number')) {
+    // if cards matches
+    card1.classList.add('matched');
+    card2.classList.add('matched');
+
+    matchedCards.push(card1, card2);
+
+    //Flipped cards array will be cleared for next turn 
+    flippedCards = [];
+
+    // TODO: Please Please Please check again later for score update and level complete
+  } else {
+    // flip back if cards do not matched
+    card1.textContent = '';
+    card2.textContent = '';
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
+
+    // flipped cards array will be clear for next turn
+    flippedCards = [];
+  }
+}
+
+
   //clear board for new game
   board.innerHTML = '';
 
@@ -72,11 +101,27 @@ function startGame(difficulty) {
     card.setAttribute('data-number', shuffled[i]);
 
     card.addEventListener('click', function () {
-      // Show the number when clicked
-      card.textContent = card.getAttribute('data-number');
-      // This will help me check if the card is working
-      console.log("Card clicked:", card.getAttribute('data-number'));
-    });
+  // If card is already flipped or matched, ignore clicks
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) {
+    return; // do nothing
+  }
+
+  // If already 2 cards flipped, ignore clicks until cards are checked
+  if (flippedCards.length === maxFlippedCards) {
+    return; // do nothing
+  }
+
+  // Show the card's number and mark it as flipped
+  card.textContent = card.getAttribute('data-number');
+  card.classList.add('flipped');
+  flippedCards.push(card);
+
+  // If 2 cards are flipped, check for a match after a short delay
+  if (flippedCards.length === maxFlippedCards) {
+    setTimeout(checkForMatch, flipBackDelay);
+  }
+});
+
 
     // Add the card to the board
     board.appendChild(card);
