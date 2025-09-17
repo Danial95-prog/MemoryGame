@@ -32,6 +32,7 @@ h1 {
   justify-content: center;
   margin: 0 auto;
   max-width: 600px;
+  margin-bottom: 20px;
 }
 
 
@@ -59,4 +60,16 @@ h1 {
   background-color: #ae2737; 
   color: white;
   cursor: default;
+}
+
+#control-buttons {
+  margin-top: 20px;       
+  display: flex;          
+  justify-content: center; 
+  gap: 10px;    
+  text-align: center;     
+}
+
+#game-board {
+  margin-bottom: 30px; 
 }

@@ -17,6 +17,9 @@ let shuffled = []; //declared so it is accesible globally
 const startButton = document.getElementById('start-btn');
 const difficultySelect = document.getElementById('difficulty-select');
 const board = document.getElementById('game-board');
+const restartButton = document.getElementById('restart-btn');
+
+
 
 /*-------------------------------- Functions --------------------------------*/
 // Function for shuffling
@@ -77,6 +80,9 @@ function startGame(difficulty) {
   //clear board for new game
   board.innerHTML = '';
   document.getElementById('message').textContent = '';
+  restartButton.style.display = 'inline-block';  //Restart button when a new game starts
+ console.log("Restart button is now visible");
+
 
 
   // Reset the game state before starting a new game
@@ -173,6 +179,13 @@ startButton.onclick = function() {
   console.log('Start button clicked. Selected difficulty:', selectedDifficulty);
   startGame(selectedDifficulty);
 };
+
+restartButton.onclick = function() {
+  console.log("Restart button clicked, restarting game...");
+  const selectedDifficulty = difficultySelect.value;  //Current difficulty
+  startGame(selectedDifficulty);  // Restart the game with the same difficulty
+};
+
 
 
 
