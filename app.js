@@ -116,7 +116,7 @@ function startGame(difficulty) {
   card.classList.add('flipped');
   flippedCards.push(card);
 
-  // If 2 cards are flipped, check for a match after a short delay
+  // Check for a match after a short delay(when 2 cards flipped)
   if (flippedCards.length === maxFlippedCards) {
     setTimeout(checkForMatch, flipBackDelay);
   }
