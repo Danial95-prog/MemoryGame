@@ -1,13 +1,5 @@
-@keyframes backgroundColorFade {
-  0% { background-color: #dff7e4; }
-  50% { background-color: #a8e063; }
-  100% { background-color: #dff7e4; }
-}
-
-
 
 body {
-   animation: backgroundColorFade 10s infinite;
   font-family: Arial, sans-serif;
   text-align: center;
 }
