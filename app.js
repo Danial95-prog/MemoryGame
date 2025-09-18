@@ -1,6 +1,7 @@
 /*-------------------------------- Constants --------------------------------*/
 const maxFlippedCards = 2;
 const flipBackDelay = 1000;
+const maxLevel = 3;
 
 /*-------------------------------- Variables --------------------------------*/
 let flippedCards = [];
@@ -9,6 +10,7 @@ let score = 0;
 let timer = 0;
 let timerInterval;
 let shuffled = []; //declared so it is accesible globally
+let currentLevel = 0;
 
 /*------------------------ Cached Element References ------------------------*/
 // Start Button to start
@@ -37,6 +39,18 @@ function shuffle(array) {
 function startGame(difficulty) {
   console.log("Starting game with difficulty: " + difficulty);
 
+  //level number based on difficulty
+  if (difficulty === 'easy') { //Level 1 is easy
+    currentLevel = 1;
+  } else if (difficulty === 'medium') { //Level 2 is medium
+    currentLevel = 2;
+  } else if (difficulty === 'hard') { //Level 3 is hard
+    currentLevel = 3;
+  }
+
+  document.getElementById('level').textContent = currentLevel;
+  console.log("Current Level set to:", currentLevel);
+
   function checkForMatch() {
   const card1 = flippedCards[0];
   const card2 = flippedCards[1];
@@ -58,7 +72,20 @@ function startGame(difficulty) {
       document.getElementById('message').textContent = 'Level Complete!';
       console.log("Level complete! Total time:", timer, "seconds");
 
+      setTimeout(() => {
+        if (currentLevel < maxLevel) {
+          currentLevel++; //Move to next Level
+          console.log("Starting next level:", currentLevel);
+          startGame(currentLevel);//Start the next level
+        } else {
+          document.getElementById('message').textContent = 'Game Complete';
+          console.log("Game Complete!");
+          
+        }
+      }, 2000);
     }
+
+    
 
     //Flipped cards array will be cleared for next turn 
     flippedCards = [];
