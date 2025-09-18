@@ -1,7 +1,9 @@
 /*-------------------------------- Constants --------------------------------*/
-const maxFlippedCards = 2;
-const flipBackDelay = 1000;
-const maxLevel = 3;
+// These are fixed values use throughout the game
+const maxFlippedCards = 2; // Maximum cards flipped at one time before checking match
+const flipBackDelay = 1000; // Delay (in ms) before flipping cards back if no match
+const maxLevel = 3;         // Total number of levels in the game
+
 
 /*-------------------------------- Variables --------------------------------*/
 let flippedCards = [];
@@ -9,210 +11,213 @@ let matchedCards = [];
 let score = 0;
 let timer = 0;
 let timerInterval;
-let shuffled = []; //declared so it is accesible globally
+let shuffled = [];
 let currentLevel = 0;
+let timeLimit = 0;
+let gameOver = false;
+let totalScore = 0;   
+let totalTime = 0; 
 
 /*------------------------ Cached Element References ------------------------*/
-// Start Button to start
-// To have a dropdown for difficulty selection
-// board: The container that display the game
 const startButton = document.getElementById('start-btn');
 const difficultySelect = document.getElementById('difficulty-select');
 const board = document.getElementById('game-board');
 const restartButton = document.getElementById('restart-btn');
 
-
-
 /*-------------------------------- Functions --------------------------------*/
-// Function for shuffling
+// Converts numeric level to string difficulty in the game
+function levelToDifficulty(level) {
+  if (level === 1) return 'easy';
+  if (level === 2) return 'medium';
+  if (level === 3) return 'hard';
+}
+
+// Shuffle function for the array symbols so cards are randomly placed
+// Fisher-Yates shuffle
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); //https://www.w3schools.com/js/js_random.asp
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+    // Pick a random index from 0 to i
+    const j = Math.floor(Math.random() * (i + 1));// https://www.w3schools.com/js/js_random.asp
+     // Swap elements at positions i and j
+    [array[i], array[j]] = [array[j], array[i]]; // https://www.w3schools.com/js/js_array_sort.asp
   }
   return array;
 }
 
-// choose the difficulty
+// Starts the game with the selected difficulty
 function startGame(difficulty) {
-  console.log("Starting game with difficulty: " + difficulty);
+  console.log("Starting game with difficulty:", difficulty);
 
-  //level number based on difficulty
-  if (difficulty === 'easy') { //Level 1 is easy
-    currentLevel = 1;
-  } else if (difficulty === 'medium') { //Level 2 is medium
-    currentLevel = 2;
-  } else if (difficulty === 'hard') { //Level 3 is hard
-    currentLevel = 3;
-  }
-
-  document.getElementById('level').textContent = currentLevel;
-  console.log("Current Level set to:", currentLevel);
-
-  function checkForMatch() {
-  const card1 = flippedCards[0];
-  const card2 = flippedCards[1];
-
-  // This is to check if data matches
-  if (card1.getAttribute('data-symbol') === card2.getAttribute('data-symbol')) {
-    // if cards matches
-    card1.classList.add('matched');
-    card2.classList.add('matched');
-
-    matchedCards.push(card1, card2);
-   // Add score
-    score += 10;
-    document.getElementById('score').textContent = score;
   
+  // Set currentLevel based on difficulty string chosen
+  if (difficulty === 'easy') currentLevel = 1;
+  else if (difficulty === 'medium') currentLevel = 2;
+  else if (difficulty === 'hard') currentLevel = 3;
 
-    if (matchedCards.length === shuffled.length) {
-      clearInterval(timerInterval); //stop timer
-      document.getElementById('message').textContent = 'Level Complete!';
-      console.log("Level complete! Total time:", timer, "seconds");
-
-      setTimeout(() => {
-        if (currentLevel < maxLevel) {
-          currentLevel++; //Move to next Level
-          console.log("Starting next level:", currentLevel);
-          startGame(currentLevel);//Start the next level
-        } else {
-          document.getElementById('message').textContent = 'Game Complete';
-          console.log("Game Complete!");
-          
-        }
-      }, 2000);
-    }
-
-    
-
-    //Flipped cards array will be cleared for next turn 
-    flippedCards = [];
-
-    // TODO: Score and Level complete done
-  } else {
-    // flip back if cards do not matched
-    card1.textContent = '';
-    card2.textContent = '';
-    card1.classList.remove('flipped');
-    card2.classList.remove('flipped');
-
-    // flipped cards array will be clear for next turn
-    flippedCards = [];
+  // Update level display on the page
+  document.getElementById('level').textContent = currentLevel;
+  // Reset total score and time if we start from the first level
+  if (currentLevel === 1) {
+    totalScore = 0;
+    totalTime = 0;
+    console.log("Reset total score and total time");
   }
-}
 
+  
+  // Set time limit for each level (more time for harder levels)
+  if (currentLevel === 1) timeLimit = 15;
+  else if (currentLevel === 2) timeLimit = 30;
+  else if (currentLevel === 3) timeLimit = 45;
 
-  //clear board for new game
-  board.innerHTML = '';
-  document.getElementById('message').textContent = '';
-  restartButton.style.display = 'inline-block';  //Restart button when a new game starts
- console.log("Restart button is now visible");
+  console.log("Time limit set to:", timeLimit);
 
-
-
-  // Reset the game state before starting a new game
-  // Clears any cards that were flipped or matched in the previous round
+  // Clear the board and reset game state variables
+  board.innerHTML = ''; /* Remove all cards from board and uses board.innerHTML
+  because it removes the entire contents including card elementss*/ //https://www.codecademy.com/resources/docs/javascript/dom-manipulation/innerHTML
+  document.getElementById('message').textContent = '';// Clear messages
+  restartButton.style.display = 'inline-block'; // Show restart button
   flippedCards = [];
   matchedCards = [];
-  console.log("Reset flippedCards and matchedCards arrays");
-  // This is to resert score and the timer
   score = 0;
   timer = 0;
+  gameOver = false;
+  clearInterval(timerInterval);// Stop any running timer
+   
+   // Reset score and timer display
   document.getElementById('score').textContent = score;
   document.getElementById('timer').textContent = timer;
 
- console.log("Score reset to", score);
- console.log("Timer reset to", timer);
-
-
-  clearInterval(timerInterval);
-  timerInterval = setInterval(function () {
-    timer++;
-
-    document.getElementById('timer').textContent = timer;
-  }, 1000);
-
-  //Store the cards based on difficulty
+  // Set symbols based on difficulty
   let symbols = [];
-
   if (difficulty === 'easy') {
-    console.log("Difficulty selected: Easy");
-    symbols = ['🥟', '🍕', '🥟', '🍕']; // 2 pairs
+    symbols = ['🥟', '🍕', '🥟', '🍕'];
+  } else if (difficulty === 'medium') {
+    symbols = ['🥟', '🍕', '🍟', '🍦', '🥟', '🍕', '🍟', '🍦'];
+  } else if (difficulty === 'hard') {
+    symbols = ['🥟', '🍕', '🍟', '🍦', '🍣', '🍔', '🥟', '🍕', '🍟', '🍦', '🍣', '🍔'];
   }
+  // Shuffle the symbols array to randomize card positions
+  shuffled = shuffle(symbols);
 
-  if (difficulty === 'medium') {
-    console.log("Difficulty selected: Medium");
-    symbols = ['🥟', '🍕', '🍟', '🍦', '🥟', '🍕', '🍟', '🍦']; // 4 pairs
-  }
-
-  if (difficulty === 'hard') {
-    console.log("Difficulty selected: Hard");
-    symbols = ['🥟', '🍕', '🍟', '🍦', '🍣', '🍔', '🥟', '🍕', '🍟', '🍦', '🍣', '🍔']; // 6 pairs
-  }
-
-  // Cards shuffling
-  shuffled = shuffle(symbols); //Global variable
-  console.log("Cards shuffled:", shuffled);
-
-  // Loop through each card symbol and create a card element
+   // Create card elements and add them to the board
+//for loop here to go through each symbol in the shuffled array
+// For each symbol, created a new card div element, set its class and attributes, and add it to the game board
   for (let i = 0; i < shuffled.length; i++) {
     const card = document.createElement('div');
-    card.className = 'card'; 
-    card.textContent = '';  // This is the start of an empty card as it is hidden first
+    card.className = 'card';// Add card class for styling
+    card.textContent = ''; // Cards start face down (no symbol showing)
+    card.setAttribute('data-symbol', shuffled[i]); // Store symbol in data attribute so can check matches later
 
-    /*save the cards value inside the data symbol attribute
-    and it also helps me identify which card is which when clicked*/
-    card.setAttribute('data-symbol', shuffled[i]);
-
+// Add click event listener for each card so it responds when the player clicks on it
     card.addEventListener('click', function () {
-  // If card is already flipped or matched, ignore clicks
-  if (card.classList.contains('flipped') || card.classList.contains('matched')) {
-    return; // do nothing
-  }
+      // To check if the game is over, if yes, player do not want player to flip any cards
+      if (gameOver) return;
 
-  // If already 2 cards flipped, ignore clicks until cards are checked
-  if (flippedCards.length === maxFlippedCards) {
-    return; // do nothing
-  }
-
-  // Show the card's symbol and mark it as flipped
-  card.textContent = card.getAttribute('data-symbol');
-  card.classList.add('flipped');
-  flippedCards.push(card);
-
-  console.log("Card clicked:", card.getAttribute('data-symbol'));
+      //Check if the clicked card is already flipped or matched
+  // If it is, ignore the click to prevent flipping it again or messing up the game logic
+      if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+      
+      //Limit how many cards can be flipped at the same time (maximum 2)
+  // Makes sure the player can’t flip more than 2 cards before the game checks for a match
+      if (flippedCards.length === maxFlippedCards) return;
 
 
-  // Check for a match after a short delay(when 2 cards flipped)
-  if (flippedCards.length === maxFlippedCards) {
-    console.log("Two cards flipped, checking for match...");
-    setTimeout(checkForMatch, flipBackDelay);
-  }
-});
-
-
-    // Add the card to the board
+      // Start the timer when the player flips the first card (timer counts seconds) 
+      
+       if (flippedCards.length === 0 && timer === 0) {
+        timerInterval = setInterval(function () {
+          timer++;
+          document.getElementById('timer').textContent = timer;
+          // If timer reaches timeLimit, stop game and show message
+          if (timer >= timeLimit) {
+            clearInterval(timerInterval);
+            gameOver = true;
+            document.getElementById('message').textContent = "Time's up! You lost!";
+            console.log("Game Over: Time limit reached.");
+          }
+        }, 1000);// Interval runs every 1000 ms (1 second)
+      }
+        // Show the symbol on the card and mark it as flipped
+      card.textContent = card.getAttribute('data-symbol');
+      card.classList.add('flipped');
+      flippedCards.push(card);
+      
+      if (flippedCards.length === maxFlippedCards) {
+        setTimeout(checkForMatch, flipBackDelay);
+      }
+    });
+    // Add the card element to the board container
     board.appendChild(card);
   }
 }
 
+// This function checks if the two flipped cards match
+function checkForMatch() {
+  const card1 = flippedCards[0];
+  const card2 = flippedCards[1];
+// Compare the symbols of the two cards
+  if (card1.getAttribute('data-symbol') === card2.getAttribute('data-symbol')) {
+    // If they match, add 'matched' class and update matchedCards array
+    card1.classList.add('matched');
+    card2.classList.add('matched');
+    matchedCards.push(card1, card2);
+    
+    // Increase score by 10 points for each match
+    score += 10;
+    document.getElementById('score').textContent = score;
+
+    // Check if all cards are matched to complete the level
+    if (matchedCards.length === shuffled.length) {
+      clearInterval(timerInterval);
+      document.getElementById('message').textContent = 'Level Complete!';
+      console.log("Level complete!");
+
+      totalScore += score;
+      totalTime += timer;
+      console.log(`Level ${currentLevel} complete! Total Score: ${totalScore}, Total Time: ${totalTime} seconds`);
+
+
+      gameOver = true;// Stop any further actions until next level or game end
+
+
+      setTimeout(() => {
+        if (currentLevel < maxLevel) {
+     currentLevel++;
+     console.log("Starting next level:", currentLevel);
+    
+     // Update difficulty select dropdown for next level
+    difficultySelect.value = levelToDifficulty(currentLevel);
+    startGame(levelToDifficulty(currentLevel));
+    } else {
+      // Game completed, show final score and total time
+    document.getElementById('message').textContent = 
+    `Game Complete! Total Score: ${totalScore}, Total Time: ${totalTime} seconds`;
+    console.log("Game Complete!");
+    }
+      }, 2000);
+    }
+    } else {
+      // If cards don't match, flip them back face down
+    card1.textContent = '';
+    card2.textContent = '';
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
+  }
+
+  // Reset flippedCards array to allow next attempt
+  flippedCards = [];
+}
+
 /*----------------------------- Event Listeners -----------------------------*/
-//Start button clicked,get the difficulty value
-//Start game function called with that difficulty to begin
-startButton.onclick = function() {
+// When the start button is clicked, get the selected difficulty and start the game
+startButton.onclick = function () {
   const selectedDifficulty = difficultySelect.value;
   console.log('Start button clicked. Selected difficulty:', selectedDifficulty);
+  startGame(selectedDifficulty); // Pass difficulty string directly
+};
+// When the restart button is clicked, restart the game with current difficulty
+restartButton.onclick = function () {
+  const selectedDifficulty = difficultySelect.value;
+  console.log("Restart button clicked. Restarting game with difficulty:", selectedDifficulty);
   startGame(selectedDifficulty);
 };
-
-restartButton.onclick = function() {
-  console.log("Restart button clicked, restarting game...");
-  const selectedDifficulty = difficultySelect.value;  //Current difficulty
-  startGame(selectedDifficulty);  // Restart the game with the same difficulty
-};
-
-
-
-
