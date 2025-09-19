@@ -28,6 +28,8 @@ Use the restart button to restart the current level at any time.
 
 To play the game, open the index.html file in your web browser. No installation or build steps are needed.
 
+https://danial95-prog.github.io/MemoryGame/
+
 
 # Screenshot
 ![Welcome](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 9.36.43 PM.png)  
