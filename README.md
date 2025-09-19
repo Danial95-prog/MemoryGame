@@ -38,10 +38,10 @@ https://danial95-prog.github.io/MemoryGame/
 ![Timesup](assets/timesup.png)  
 
 
-![LevelComplete](assets/levelcomplete.png.png)  
+![LevelComplete](assets/levelcomplete.png)  
 
 
-![GameComplete](assets/gamecomplete.png.png)  
+![GameComplete](assets/gamecomplete.png)  
 
 # Wireframe
 ![Wireframe](assets/wireframe1.png) 
