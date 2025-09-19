@@ -32,24 +32,24 @@ https://danial95-prog.github.io/MemoryGame/
 
 
 # Screenshot
-![Welcome](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 9.36.43 PM.png)  
+![Welcome](assets/welcome.png)  
 
 
-![Timesup](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 9.37.14 PM.png)  
+![Timesup](assets/timesup.png)  
 
 
-![LevelComplete](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 9.42.13 PM.png)  
+![LevelComplete](assets/levelcomplete.png.png)  
 
 
-![GameComplete](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 9.39.38 PM.png)  
+![GameComplete](assets/gamecomplete.png.png)  
 
 # Wireframe
-![Wireframe](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 10.14.46 PM.png) 
+![Wireframe](assets/wireframe1.png) 
 
 
 
 
-![Wireframe](/Users/danialdurrani/Desktop/Screenshot 2025-09-19 at 10.15.00 PM.png) 
+![Wireframe](assets/wireframe2.png) 
 
 
 
